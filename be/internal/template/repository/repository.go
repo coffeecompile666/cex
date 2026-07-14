@@ -1,4 +1,4 @@
-package template
+package repository
 
 import (
 	"gorm.io/gorm"

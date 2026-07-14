@@ -8,6 +8,9 @@ import (
 	"icon_exchange/internal/config"
 	"icon_exchange/internal/module_mailer"
 	"icon_exchange/internal/module_user"
+	"icon_exchange/internal/module_user/model"
+	"icon_exchange/internal/module_user/repository"
+	"icon_exchange/internal/module_user/service"
 	"icon_exchange/internal/module_wallet"
 	"icon_exchange/internal/shared/database"
 
@@ -21,9 +24,13 @@ func main() {
 	// 2. Connect to Database
 	db := database.ConnectDB()
 	if db != nil {
-		// AutoMigrate will automatically create or update the tables based on the Structs
 		log.Println("Running AutoMigrate...")
-		err := db.AutoMigrate(&module_user.User{}, &module_wallet.Wallet{})
+		err := db.AutoMigrate(
+			&model.User{},
+			&model.OTP{},
+			&model.Session{},
+			&module_wallet.Wallet{},
+		)
 		if err != nil {
 			log.Fatalf("AutoMigrate failed: %v", err)
 		}
@@ -38,10 +45,16 @@ func main() {
 	// -> Mailer Module
 	mailerService := module_mailer.NewService()
 
-	// -> User Module (Inject walletService and mailerService into userService)
-	userRepo := module_user.NewRepository(db)
-	userService := module_user.NewService(userRepo, walletService, mailerService)
-	userHandler := module_user.NewHandler(userService)
+	// -> User Module: Repositories
+	userRepo := repository.NewUserRepo(db)
+	otpRepo := repository.NewOTPRepo(db)
+	sessionRepo := repository.NewSessionRepo(db)
+
+	// -> User Module: Auth Service (wires together repos + mailer)
+	authService := service.NewAuthService(db, userRepo, otpRepo, sessionRepo, mailerService)
+
+	// -> User Module: Handler
+	userHandler := module_user.NewHandler(authService)
 
 	// 4. Setup Router
 	r := gin.Default()
