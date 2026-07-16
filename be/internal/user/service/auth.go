@@ -12,9 +12,9 @@ import (
 	"strconv"
 	"time"
 
-	"icon_exchange/internal/module_user/model"
-	"icon_exchange/internal/module_user/repository"
 	"icon_exchange/internal/shared"
+	"icon_exchange/internal/user/model"
+	"icon_exchange/internal/user/repository"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"

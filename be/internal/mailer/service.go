@@ -1,4 +1,4 @@
-package module_mailer
+package mailer
 
 import (
 	"log"

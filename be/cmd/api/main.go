@@ -1,18 +1,21 @@
 package main
 
 import (
+	template "icon_exchange/internal/market"
+	model2 "icon_exchange/internal/market/model"
+	repository2 "icon_exchange/internal/market/repository"
+	service3 "icon_exchange/internal/market/service"
 	"log"
 	"net/http"
 	"os"
 
 	"icon_exchange/internal/config"
-	"icon_exchange/internal/module_mailer"
-	"icon_exchange/internal/module_user"
-	"icon_exchange/internal/module_user/model"
-	"icon_exchange/internal/module_user/repository"
-	"icon_exchange/internal/module_user/service"
-	"icon_exchange/internal/module_wallet"
+	"icon_exchange/internal/mailer"
 	"icon_exchange/internal/shared/database"
+	"icon_exchange/internal/user"
+	"icon_exchange/internal/user/model"
+	"icon_exchange/internal/user/repository"
+	"icon_exchange/internal/user/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,21 +32,15 @@ func main() {
 			&model.User{},
 			&model.OTP{},
 			&model.Session{},
-			&module_wallet.Wallet{},
+			&model2.Market{},
 		)
 		if err != nil {
 			log.Fatalf("AutoMigrate failed: %v", err)
 		}
 	}
 
-	// 3. Initialize Modules & Dependency Injection
-	// -> Wallet Module
-	walletRepo := module_wallet.NewRepository(db)
-	walletService := module_wallet.NewService(walletRepo)
-	walletHandler := module_wallet.NewHandler(walletService)
-
 	// -> Mailer Module
-	mailerService := module_mailer.NewService()
+	mailerService := mailer.NewService()
 
 	// -> User Module: Repositories
 	userRepo := repository.NewUserRepo(db)
@@ -54,7 +51,12 @@ func main() {
 	authService := service.NewAuthService(db, userRepo, otpRepo, sessionRepo, mailerService)
 
 	// -> User Module: Handler
-	userHandler := module_user.NewHandler(authService)
+	userHandler := user.NewHandler(authService)
+
+	// -> Market Module: Handler
+	marketRepo := repository2.NewMarketRepo(db)
+	marketService := service3.NewMarketService(marketRepo)
+	marketHandler := template.NewMarketHandler(marketService, marketRepo)
 
 	// 4. Setup Router
 	r := gin.Default()
@@ -67,7 +69,10 @@ func main() {
 
 		// Register module routes
 		userHandler.RegisterRoutes(v1)
-		walletHandler.RegisterRoutes(v1)
+
+		// Register module market
+		marketHandler.RegisterRoutes(v1)
+
 	}
 
 	// 5. Start Server

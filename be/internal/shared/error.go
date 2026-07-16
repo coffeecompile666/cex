@@ -48,3 +48,8 @@ var (
 	// Token
 	ErrInvalidToken Error = Error{Code: 200020, Message: "invalid or expired refresh token", Status: http.StatusUnauthorized}
 )
+
+var (
+	ErrInvalidOrderAmount = Error{Code: 200030, Message: "invalid order amount", Status: http.StatusBadRequest}
+	ErrMarketNotOpen      = Error{Code: 200031, Message: "market not open", Status: http.StatusForbidden}
+)

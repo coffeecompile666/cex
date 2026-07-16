@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"icon_exchange/internal/module_user/model"
+	"icon_exchange/internal/user/model"
 
 	"gorm.io/gorm"
 )

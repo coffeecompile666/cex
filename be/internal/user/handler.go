@@ -1,12 +1,12 @@
-package module_user
+package user
 
 import (
 	"errors"
 	"net/http"
 
-	"icon_exchange/internal/module_user/repository"
-	"icon_exchange/internal/module_user/service"
 	"icon_exchange/internal/shared"
+	"icon_exchange/internal/user/repository"
+	"icon_exchange/internal/user/service"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
