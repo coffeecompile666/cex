@@ -1,11 +1,13 @@
 package template
 
-import service2 "icon_exchange/internal/template/service"
+import (
+	"icon_exchange/internal/ledger/service"
+)
 
 type Handler struct {
-	service *service2.Service
+	service *service.Service
 }
 
-func NewHandler(service *service2.Service) *Handler {
+func NewHandler(service *service.Service) *Handler {
 	return &Handler{service: service}
 }

@@ -50,6 +50,7 @@ var (
 )
 
 var (
-	ErrInvalidOrderAmount = Error{Code: 200030, Message: "invalid order amount", Status: http.StatusBadRequest}
-	ErrMarketNotOpen      = Error{Code: 200031, Message: "market not open", Status: http.StatusForbidden}
+	ErrInvalidOrderAmount  = Error{Code: 200030, Message: "invalid order amount", Status: http.StatusBadRequest}
+	ErrMarketNotOpen       = Error{Code: 200031, Message: "market not open", Status: http.StatusForbidden}
+	ErrJournalEntryInvalid = Error{Code: 200032, Message: "journal entry invalid", Status: http.StatusInternalServerError}
 )
