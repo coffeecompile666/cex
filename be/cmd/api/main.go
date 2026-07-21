@@ -5,6 +5,7 @@ import (
 	model2 "icon_exchange/internal/market/model"
 	repository2 "icon_exchange/internal/market/repository"
 	service3 "icon_exchange/internal/market/service"
+	"icon_exchange/internal/matching_engine"
 	"log"
 	"net/http"
 	"os"
@@ -57,6 +58,10 @@ func main() {
 	marketRepo := repository2.NewMarketRepo(db)
 	marketService := service3.NewMarketService(marketRepo)
 	marketHandler := template.NewMarketHandler(marketService, marketRepo)
+
+	// -> Start Matching engine
+	matchingEngine := matching_engine.NewMatchingEngine()
+	matchingEngine.Start()
 
 	// 4. Setup Router
 	r := gin.Default()

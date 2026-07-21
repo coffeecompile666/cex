@@ -1,24 +1,50 @@
 package matching_engine
 
-type IOrderBookManager interface {
-	PlaceOrder()
-	CancelOrder()
-	GetOrderBook()
+import (
+	template "icon_exchange/internal/order_book"
+	"icon_exchange/internal/shared"
+)
+
+type MatchingEngine struct {
+	markets map[uint]*MarketMatchingInstance
 }
 
-type OrderBookManager struct {
-	OrderBook OrderBook
+type MarketMatchingInstance struct {
+	marketID uint
+	matching *Matching
 }
 
-type OrderBook struct {
-	orders []Order
+func NewMatchingEngine() *MatchingEngine {
+	btc := uint(1)
+
+	oi := NewOrderIndex()
+	ob := template.NewOrderBook()
+
+	btcMatching := NewMatching(btc, oi, ob)
+
+	markets := make(map[uint]*MarketMatchingInstance)
+
+	markets[btc] = &MarketMatchingInstance{
+		marketID: btc,
+		matching: btcMatching,
+	}
+
+	return &MatchingEngine{
+		markets: markets,
+	}
 }
 
-type Order struct {
-	name     string
-	price    float64
-	quantity int
+func (engine *MatchingEngine) Start() {
+	for _, market := range engine.markets {
+		market.matching.Start()
+	}
 }
 
-type MatchEngine interface {
+func (engine *MatchingEngine) PushOrder(marketID uint, cmd Command) error {
+	market, ok := engine.markets[marketID]
+	if !ok {
+		return shared.ErrMarketNotFound
+	}
+
+	return market.matching.Push(cmd)
 }

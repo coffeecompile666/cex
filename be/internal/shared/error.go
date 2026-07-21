@@ -50,7 +50,11 @@ var (
 )
 
 var (
-	ErrInvalidOrderAmount  = Error{Code: 200030, Message: "invalid order amount", Status: http.StatusBadRequest}
-	ErrMarketNotOpen       = Error{Code: 200031, Message: "market not open", Status: http.StatusForbidden}
-	ErrJournalEntryInvalid = Error{Code: 200032, Message: "journal entry invalid", Status: http.StatusInternalServerError}
+	ErrInvalidOrderAmount       = Error{Code: 200030, Message: "invalid order amount", Status: http.StatusBadRequest}
+	ErrMarketNotOpen            = Error{Code: 200031, Message: "market not open", Status: http.StatusForbidden}
+	ErrJournalEntryInvalid      = Error{Code: 200032, Message: "journal entry invalid", Status: http.StatusInternalServerError}
+	ErrMarketNotFound           = Error{Code: 200033, Message: "market not found", Status: http.StatusForbidden}
+	ErrQueueFull                = Error{Code: 200034, Message: "queue full", Status: http.StatusForbidden}
+	ErrOrderInOrderBookNotFound = Error{Code: 200035, Message: "order book not found", Status: http.StatusForbidden}
+	ErrOrderInOrderBookInvalid  = Error{Code: 200036, Message: "order book invalid", Status: http.StatusForbidden}
 )
