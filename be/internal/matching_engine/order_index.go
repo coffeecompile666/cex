@@ -1,6 +1,9 @@
 package matching_engine
 
-import "icon_exchange/internal/shared"
+import (
+	template "icon_exchange/internal/order_book"
+	"icon_exchange/internal/shared"
+)
 
 type IOrderIndex interface {
 	Push(cmd Command) error
@@ -8,8 +11,28 @@ type IOrderIndex interface {
 	GetLength() uint
 }
 
+type TradeType int
+
+const (
+	MarketTrade TradeType = iota
+	LimitTrade  TradeType = iota
+)
+
+type CommandType int
+
+const (
+	NewOrder    CommandType = iota
+	AmendOrder  CommandType = iota
+	CancelOrder CommandType = iota
+)
+
 type Command struct {
-	ID uint
+	OrderID     uint
+	Price       uint
+	Quantity    uint
+	Side        template.Side
+	TradeType   TradeType
+	CommandType CommandType
 }
 
 const MaxBufferSize = 100

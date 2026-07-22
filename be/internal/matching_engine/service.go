@@ -46,5 +46,9 @@ func (engine *MatchingEngine) PushOrder(marketID uint, cmd Command) error {
 		return shared.ErrMarketNotFound
 	}
 
+	if cmd.Price < 1 || cmd.Quantity < 1 {
+		return shared.ErrOrderInOrderBookInvalid
+	}
+
 	return market.matching.Push(cmd)
 }

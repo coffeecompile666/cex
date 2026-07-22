@@ -57,4 +57,5 @@ var (
 	ErrQueueFull                = Error{Code: 200034, Message: "queue full", Status: http.StatusForbidden}
 	ErrOrderInOrderBookNotFound = Error{Code: 200035, Message: "order book not found", Status: http.StatusForbidden}
 	ErrOrderInOrderBookInvalid  = Error{Code: 200036, Message: "order book invalid", Status: http.StatusForbidden}
+	ErrOrderBookEmpty           = Error{Code: 200037, Message: "order book empty", Status: http.StatusForbidden}
 )
