@@ -1,10 +1,11 @@
 package main
 
 import (
+	template2 "icon_exchange/internal/asset"
+	repository3 "icon_exchange/internal/asset/repository"
 	template "icon_exchange/internal/market"
 	model2 "icon_exchange/internal/market/model"
 	repository2 "icon_exchange/internal/market/repository"
-	service3 "icon_exchange/internal/market/service"
 	"icon_exchange/internal/matching_engine"
 	"log"
 	"net/http"
@@ -56,8 +57,12 @@ func main() {
 
 	// -> Market Module: Handler
 	marketRepo := repository2.NewMarketRepo(db)
-	marketService := service3.NewMarketService(marketRepo)
-	marketHandler := template.NewMarketHandler(marketService, marketRepo)
+	//marketService := service3.NewMarketService(marketRepo)
+	marketHandler := template.NewMarketHandler(marketRepo)
+
+	// -> Asset Module: Handler
+	assetRepo := repository3.NewAssetRepository(db)
+	assetHandler := template2.NewAssetHandler(assetRepo)
 
 	// -> Start Matching engine
 	matchingEngine := matching_engine.NewMatchingEngine()
@@ -75,9 +80,16 @@ func main() {
 		// Register module routes
 		userHandler.RegisterRoutes(v1)
 
-		// Register module market
-		marketHandler.RegisterRoutes(v1)
+		// Create a group for routes that require authentication
+		authorized := v1.Group("/")
+		authorized.Use(user.AuthMiddleware())
+		{
+			// Register module asset
+			assetHandler.RegisterRoutes(authorized)
+		}
 
+		// Register module market (public routes)
+		marketHandler.RegisterRoutes(v1)
 	}
 
 	// 5. Start Server

@@ -50,11 +50,20 @@ var (
 )
 
 var (
-	ErrInvalidOrderAmount       = Error{Code: 200030, Message: "invalid order amount", Status: http.StatusBadRequest}
-	ErrMarketNotOpen            = Error{Code: 200031, Message: "market not open", Status: http.StatusForbidden}
-	ErrJournalEntryInvalid      = Error{Code: 200032, Message: "journal entry invalid", Status: http.StatusInternalServerError}
-	ErrMarketNotFound           = Error{Code: 200033, Message: "market not found", Status: http.StatusForbidden}
-	ErrQueueFull                = Error{Code: 200034, Message: "queue full", Status: http.StatusForbidden}
-	ErrOrderInOrderBookNotFound = Error{Code: 200035, Message: "order book not found", Status: http.StatusForbidden}
-	ErrOrderInOrderBookInvalid  = Error{Code: 200036, Message: "order book invalid", Status: http.StatusForbidden}
+	ErrInvalidOrderAmount             = Error{Code: 200030, Message: "invalid order amount", Status: http.StatusBadRequest}
+	ErrMarketNotOpen                  = Error{Code: 200031, Message: "market not open", Status: http.StatusForbidden}
+	ErrJournalEntryInvalid            = Error{Code: 200032, Message: "journal entry invalid", Status: http.StatusInternalServerError}
+	ErrMarketNotFound                 = Error{Code: 200033, Message: "market not found", Status: http.StatusForbidden}
+	ErrQueueFull                      = Error{Code: 200034, Message: "queue full", Status: http.StatusForbidden}
+	ErrOrderInOrderBookNotFound       = Error{Code: 200035, Message: "order book not found", Status: http.StatusForbidden}
+	ErrOrderInOrderBookInvalid        = Error{Code: 200036, Message: "order book invalid", Status: http.StatusForbidden}
+	ErrAssetNotFound                  = Error{Code: 200037, Message: "asset not found", Status: http.StatusForbidden}
+	ErrAmountNotSufficient            = Error{Code: 200038, Message: "amount not sufficient", Status: http.StatusForbidden}
+	ErrUnlockAmountFailed             = Error{Code: 200039, Message: "unlock amount failed", Status: http.StatusForbidden}
+	ErrOrderStatusNotAllowed          = Error{Code: 200040, Message: "order status not allowed", Status: http.StatusForbidden}
+	ErrOrderQuantityInvalid           = Error{Code: 200041, Message: "order quantity invalid", Status: http.StatusForbidden}
+	ErrOrderPriceInvalid              = Error{Code: 200042, Message: "order price invalid", Status: http.StatusForbidden}
+	ErrOrderPriceForMarketTypeInvalid = Error{Code: 200043, Message: "order price for market type invalid", Status: http.StatusForbidden}
+	ErrInvalidOffset                  = Error{Code: 200044, Message: "invalid offset", Status: http.StatusForbidden}
+	ErrInvalidLimit                   = Error{Code: 200045, Message: "invalid limit", Status: http.StatusForbidden}
 )

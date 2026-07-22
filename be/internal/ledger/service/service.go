@@ -7,6 +7,10 @@ import (
 	"gorm.io/gorm"
 )
 
+type ILedgerService interface {
+	Write(tx *gorm.DB, journalCommand []model.JournalCommand) error
+}
+
 type Service struct {
 	repo *repository.Repository
 }
@@ -16,7 +20,7 @@ func NewLedgerService(repo *repository.Repository) *Service {
 }
 
 // Write log a transaction to ledger
-func (s *Service) Write(journalCommand []model.JournalCommand, tx *gorm.DB) error {
+func (s *Service) Write(tx *gorm.DB, journalCommand []model.JournalCommand) error {
 	journalEntry, err := model.NewJournalEntry(journalCommand)
 	if err != nil {
 		return err
