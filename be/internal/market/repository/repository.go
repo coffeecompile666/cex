@@ -49,3 +49,38 @@ func (repo *Repository) GetBySymbol(symbol string) (*model.Market, error) {
 	}
 	return &market, nil
 }
+
+func (repo *Repository) GetMarkets() ([]model.Market, error) {
+	var markets []model.Market
+	if err := repo.db.Where("IsBaseCurrency = ?", false).Find(&markets).Error; err != nil {
+		return nil, shared.ErrInternalServerError
+	}
+	return markets, nil
+}
+
+func (repo *Repository) GetMarketByID(id uint) (*model.Market, error) {
+	var market model.Market
+	if err := repo.db.Where("IsBaseCurrency", false).First(&market, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+		}
+	}
+	return &market, nil
+}
+
+func (repo *Repository) GetBaseCurrencyByID(id uint) (*model.Market, error) {
+	var market model.Market
+	if err := repo.db.Where("IsBaseCurrency", true).First(&market, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+		}
+	}
+	return &market, nil
+}
+
+func (repo *Repository) GetBaseCurrency() (*model.Market, error) {
+	var market model.Market
+	if err := repo.db.Where("IsBaseCurrency", true).First(&market).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+		}
+	}
+	return &market, nil
+}
