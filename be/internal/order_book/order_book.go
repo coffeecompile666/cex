@@ -7,18 +7,11 @@ import (
 	"github.com/emirpasic/gods/trees/redblacktree"
 )
 
-type Side string
-
-const (
-	BUY  Side = "buy"
-	SELL Side = "sell"
-)
-
 type Order struct {
 	ID       uint
 	Price    uint
 	Quantity uint
-	Side     Side
+	Side     shared.OrderSide
 	Element  *list.Element
 }
 
@@ -69,9 +62,9 @@ func (o *OrderBook) Add(order *Order) {
 	var tree *redblacktree.Tree
 
 	switch order.Side {
-	case BUY:
+	case shared.OrderSideBuy:
 		tree = o.bidBook
-	case SELL:
+	case shared.OrderSideSell:
 		tree = o.askBook
 	}
 
@@ -116,9 +109,9 @@ func (o *OrderBook) Remove(orderID uint) error {
 	level.Volume -= orderEntry.order.Quantity
 
 	if level.Orders.Len() == 0 {
-		if orderEntry.order.Side == BUY {
+		if orderEntry.order.Side == shared.OrderSideBuy {
 			o.bidBook.Remove(orderEntry.level.Price)
-		} else {
+		} else if orderEntry.order.Side == shared.OrderSideSell {
 			o.askBook.Remove(orderEntry.level.Price)
 		}
 	}

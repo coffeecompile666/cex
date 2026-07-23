@@ -9,6 +9,7 @@ import (
 type IMatching interface {
 	GetMarketID() uint
 	Start()
+	Push(cmd Command) error
 }
 
 type Matching struct {
@@ -58,11 +59,11 @@ func (m *Matching) run() {
 
 func (m *Matching) match(cmd Command) {
 	switch cmd.CommandType {
-	case NewOrder:
-		isMarket := cmd.TradeType == MarketTrade
-		isLimit := cmd.TradeType == LimitTrade
-		isSell := cmd.Side == template.SELL
-		isBuy := cmd.Side == template.BUY
+	case CommandTypeNew:
+		isMarket := cmd.OrderType == shared.OrderTypeMarket
+		isLimit := cmd.OrderType == shared.OrderTypeLimit
+		isSell := cmd.OrderSide == shared.OrderSideSell
+		isBuy := cmd.OrderSide == shared.OrderSideBuy
 
 		var e error
 		if isMarket && isSell {
@@ -103,7 +104,7 @@ func (m *Matching) match(cmd Command) {
 			}
 		}
 
-	case CancelOrder:
+	case CommandTypeCancel:
 		e := m.orderBook.Remove(cmd.OrderID)
 		if e != nil {
 			_ = fmt.Errorf("error removing order %d: %s", cmd.OrderID, e)
@@ -111,7 +112,7 @@ func (m *Matching) match(cmd Command) {
 			fmt.Println("Order removed", cmd.OrderID)
 			// todo: send order cancel event
 		}
-	case AmendOrder:
+	case CommandTypeAmend:
 		e := m.orderBook.Amend(template.AmendCommand{
 			OrderID:  cmd.OrderID,
 			Price:    cmd.Price,

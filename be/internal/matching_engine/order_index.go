@@ -1,7 +1,6 @@
 package matching_engine
 
 import (
-	template "icon_exchange/internal/order_book"
 	"icon_exchange/internal/shared"
 )
 
@@ -11,27 +10,20 @@ type IOrderIndex interface {
 	GetLength() uint
 }
 
-type TradeType int
-
-const (
-	MarketTrade TradeType = iota
-	LimitTrade  TradeType = iota
-)
-
 type CommandType int
 
 const (
-	NewOrder    CommandType = iota
-	AmendOrder  CommandType = iota
-	CancelOrder CommandType = iota
+	CommandTypeNew    CommandType = iota
+	CommandTypeAmend  CommandType = iota
+	CommandTypeCancel CommandType = iota
 )
 
 type Command struct {
 	OrderID     uint
 	Price       uint
 	Quantity    uint
-	Side        template.Side
-	TradeType   TradeType
+	OrderSide   shared.OrderSide
+	OrderType   shared.OrderType
 	CommandType CommandType
 }
 

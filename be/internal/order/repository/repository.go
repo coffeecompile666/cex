@@ -30,3 +30,27 @@ func (repo *Repository) GetByUserID(userID uint, offset int, limit int) ([]*mode
 
 	return orders, nil
 }
+
+func (repo *Repository) Create(tx *gorm.DB, order *model.Order) (*model.Order, error) {
+	var db *gorm.DB
+	if tx != nil {
+		db = tx
+	} else {
+		db = repo.db
+	}
+
+	err := db.Create(order).Error
+	if err != nil {
+		return nil, shared.ErrInternalServerError
+	}
+	return order, nil
+}
+
+func (repo *Repository) GetByID(userID uint, id uint) (*model.Order, error) {
+	var order *model.Order
+	err := repo.db.Where("id = ? AND userID = ?", id, userID).First(&order).Error
+	if err != nil {
+		return nil, shared.ErrInternalServerError
+	}
+	return order, nil
+}

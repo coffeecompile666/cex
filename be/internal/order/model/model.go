@@ -40,31 +40,18 @@ var allowedStatus = map[OrderStatus]map[OrderStatus]bool{
 	OrderStatusExpired:   {},
 }
 
-type OrderType string
-
-const (
-	OrderTypeMarket OrderType = "MARKET"
-	OrderTypeLimit  OrderType = "LIMIT"
-)
-
-type OrderSide string
-
-const (
-	OrderSideBuy  OrderSide = "BUY"
-	OrderSideSell OrderSide = "SELL"
-)
-
 type Order struct {
 	gorm.Model
 
-	UserID            uint        `gorm:"type:bigint;not null;index:idx_order_user_id"`
-	MarketID          uint        `gorm:"type:bigint;not null;index:idx_order_market_id"`
-	Quantity          uint        `gorm:"type:bigint;not null"`
-	RemainingQuantity uint        `gorm:"type:bigint;not null"`
-	Price             uint        `gorm:"type:bigint;not null"`
-	Status            OrderStatus `gorm:"type:varchar(32); not null"`
-	Type              OrderType   `gorm:"type:varchar(32); not null"`
-	Side              OrderSide   `gorm:"type:varchar(32); not null"`
+	UserID            uint             `gorm:"type:bigint;not null;index:idx_order_user_id"`
+	MarketID          uint             `gorm:"type:bigint;not null;index:idx_order_market_id"`
+	Quantity          uint             `gorm:"type:bigint;not null"`
+	RemainingQuantity uint             `gorm:"type:bigint;not null"`
+	Price             uint             `gorm:"type:bigint;not null"`
+	TotalPrice        uint             `gorm:"type:bigint;not null"`
+	Status            OrderStatus      `gorm:"type:varchar(32); not null"`
+	Type              shared.OrderType `gorm:"type:varchar(32); not null"`
+	Side              shared.OrderSide `gorm:"type:varchar(32); not null"`
 
 	Market model.Market `gorm:"foreignkey:MarketID"`
 }
@@ -83,6 +70,20 @@ func (o *Order) SetStatus(status OrderStatus) error {
 	return nil
 }
 
+func (o *Order) IsAvailableToCancel() error {
+	if o.Status != OrderStatusOpen && o.Status != OrderStatusPartiallyFilled {
+		return shared.ErrOrderStatusNotAllowed
+	}
+	return nil
+}
+
+func (o *Order) IsAvailableToAmend() error {
+	if o.Status != OrderStatusOpen && o.Status != OrderStatusPartiallyFilled {
+		return shared.ErrOrderStatusNotAllowed
+	}
+	return nil
+}
+
 func (o *Order) ValidatePrice() error {
 	if o.Quantity == 0 {
 		return shared.ErrInvalidOrderAmount
@@ -93,11 +94,11 @@ func (o *Order) ValidatePrice() error {
 	}
 
 	switch o.Type {
-	case OrderTypeLimit:
+	case shared.OrderTypeLimit:
 		if o.Price <= 0 {
 			return shared.ErrInvalidOrderAmount
 		}
-	case OrderTypeMarket:
+	case shared.OrderTypeMarket:
 		if o.Price != 0 {
 			return shared.ErrOrderPriceForMarketTypeInvalid
 		}

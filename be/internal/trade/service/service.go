@@ -4,6 +4,9 @@ import (
 	"icon_exchange/internal/template/repository"
 )
 
+type ITradeService interface {
+}
+
 type Service struct {
 	repo *repository.Repository
 }

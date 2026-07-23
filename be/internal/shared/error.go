@@ -67,4 +67,10 @@ var (
 	ErrInvalidOffset                  = Error{Code: 200044, Message: "invalid offset", Status: http.StatusForbidden}
 	ErrInvalidLimit                   = Error{Code: 200045, Message: "invalid limit", Status: http.StatusForbidden}
 	ErrOrderBookEmpty                 = Error{Code: 200037, Message: "order book empty", Status: http.StatusForbidden}
+
+	ErrOrderQuantityTooSmall          = Error{Code: 200046, Message: "order quantity is too small", Status: http.StatusBadRequest}
+	ErrOrderQuantityPrecisionExceeded = Error{Code: 200047, Message: "order quantity precision exceeds allowed maximum decimal places", Status: http.StatusBadRequest}
+	ErrOrderQuantityDecimalsExceeded  = Error{Code: 200048, Message: "order quantity decimals exceed allowed system maximum", Status: http.StatusBadRequest}
+	ErrBalanceNotSufficient           = Error{Code: 200049, Message: "balance not sufficient", Status: http.StatusForbidden}
+	ErrIntegerOverflow                = Error{Code: 200050, Message: "integer overflow", Status: http.StatusForbidden}
 )
