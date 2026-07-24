@@ -6,6 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type AccountType string
+
+const (
+	AccountTypeAsset    AccountType = "ASSET"
+	AccountTypeMainPool AccountType = "MAIN_POOL"
+)
+
 type Account struct {
 	gorm.Model
 

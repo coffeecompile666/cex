@@ -41,3 +41,15 @@ func (a *Asset) UnLock(amount uint) error {
 	a.LockedAmount -= amount
 	return nil
 }
+
+func (a *Asset) Debit(amount uint) error {
+	if amount < a.GetAvailableAmount() {
+		return shared.ErrAmountNotSufficient
+	}
+	a.Amount -= amount
+	return nil
+}
+
+func (a *Asset) Credit(amount uint) {
+	a.Amount += amount
+}

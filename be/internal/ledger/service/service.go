@@ -9,6 +9,7 @@ import (
 
 type ILedgerService interface {
 	Write(tx *gorm.DB, journalCommand []model.JournalCommand) error
+	GetAccount(tx *gorm.DB, conditions *model.Account) (*model.Account, error)
 }
 
 type Service struct {
@@ -27,4 +28,8 @@ func (s *Service) Write(tx *gorm.DB, journalCommand []model.JournalCommand) erro
 	}
 
 	return s.repo.Write(journalEntry, tx)
+}
+
+func (s *Service) GetAccountConditions(tx *gorm.DB, conditions *model.Account) (*model.Account, error) {
+	return s.repo.GetAccountCondition(tx, conditions)
 }

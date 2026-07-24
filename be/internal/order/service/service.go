@@ -16,6 +16,7 @@ type IOrderService interface {
 	CreateOrder(cmd CreateOrderCommand) (uint, error)
 	CancelOrder(cmd CancelOrderCommand) (uint, error)
 	AmendOrder(cmd AmendOrderCommand) (uint, error)
+	GetByIDForUpdate(tx *gorm.DB, id uint) (*model.Order, error)
 }
 type Service struct {
 	repo           *repository.Repository
@@ -223,4 +224,8 @@ func (s Service) AmendOrder(cmd AmendOrderCommand) error {
 	}
 
 	return nil
+}
+
+func (s Service) GetByIDForUpdate(tx *gorm.DB, id uint) (*model.Order, error) {
+	return s.repo.GetByIDForUpdate(tx, id)
 }

@@ -20,8 +20,8 @@ func (repo *Repository) WithTransaction(fn func(tx *gorm.DB) error) error {
 	return repo.db.Transaction(fn)
 }
 
-func (repo *Repository) GetAll() ([]model.Market, error) {
-	var markets []model.Market
+func (repo *Repository) GetAll() ([]*model.Market, error) {
+	var markets []*model.Market
 	if err := repo.db.Find(&markets).Error; err != nil {
 		return nil, shared.ErrInternalServerError
 	}

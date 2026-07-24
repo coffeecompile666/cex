@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"icon_exchange/internal/order/model"
 	"icon_exchange/internal/shared"
 
@@ -50,6 +51,25 @@ func (repo *Repository) GetByID(userID uint, id uint) (*model.Order, error) {
 	var order *model.Order
 	err := repo.db.Where("id = ? AND userID = ?", id, userID).First(&order).Error
 	if err != nil {
+		return nil, shared.ErrInternalServerError
+	}
+	return order, nil
+}
+
+func (repo *Repository) GetByIDForUpdate(tx *gorm.DB, id uint) (*model.Order, error) {
+	var db *gorm.DB
+	if tx != nil {
+		db = tx
+	} else {
+		db = repo.db
+	}
+
+	order := &model.Order{}
+	err := db.Find(order, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, shared.ErrNotFound
+		}
 		return nil, shared.ErrInternalServerError
 	}
 	return order, nil

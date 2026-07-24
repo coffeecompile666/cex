@@ -8,6 +8,7 @@ import (
 type IMarketService interface {
 	GetMarketByID(id uint) (*model.Market, error)
 	GetBaseCurrency() (*model.Market, error)
+	GetAll() ([]*model.Market, error)
 }
 
 type MarketService struct {
@@ -24,4 +25,8 @@ func (m MarketService) GetMarketByID(id uint) (*model.Market, error) {
 
 func (m MarketService) GetBaseCurrency() (*model.Market, error) {
 	return m.repo.GetBaseCurrency()
+}
+
+func (m MarketService) GetAll() ([]*model.Market, error) {
+	return m.repo.GetAll()
 }
